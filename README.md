@@ -39,6 +39,8 @@ Tests in chunks, code in chunks — never the whole feature at once.
 
 **And it stays lean:** only what was asked, no speculative config or abstractions, near-zero comments (the code is the *what*; a comment is a rare *why*), no faked green.
 
+**And it talks straight:** your domain's words, not framework nouns — and said literally. No metaphors, no analogies, no idioms, no writerly flourish. "The handler saves the record but never sends the confirmation email," not "the handler carries the baton one leg."
+
 ## Before / after
 
 You ask: *"users should get an email when their order ships."*

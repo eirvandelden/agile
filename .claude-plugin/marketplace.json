@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "agile",
-      "description": "Outside-in TDD in small steps, simple design, clean code, plain domain language.",
+      "description": "Outside-in TDD in small steps, simple design, clean code, plain and literal domain language.",
       "source": "./",
       "category": "productivity"
     }
