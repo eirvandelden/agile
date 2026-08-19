@@ -29,5 +29,7 @@ same terms:
   - hooks/claude-codex-hooks.json   lifecycle hook map, Windows command guard
   - hooks/agile-core.js             host detection, hook output shapes
   - hooks/agile-prompt.js           stdin read with never-hang fallback
+  - plugin.json                     Grok Build skill-only manifest (no hooks)
+  - .grok-plugin/marketplace.json   Grok Build marketplace index
 
 The ruleset (GOAL.md, skills/agile/SKILL.md, AGENTS.md) is original work.
