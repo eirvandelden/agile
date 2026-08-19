@@ -23,3 +23,10 @@ test('package files include the ruleset, hooks, and OpenCode adapter', () => {
     assert.ok(pkg.files.includes(needed), 'files must include ' + needed);
   }
 });
+
+test('every path listed in package files exists on disk', () => {
+  for (const entry of pkg.files) {
+    const onDisk = path.join(__dirname, '..', entry);
+    assert.ok(fs.existsSync(onDisk), `package.json files lists missing path: ${entry}`);
+  }
+});
