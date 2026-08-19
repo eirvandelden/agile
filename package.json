@@ -1,0 +1,39 @@
+{
+  "name": "@hubertlepicki/agile",
+  "version": "0.3.0",
+  "description": "Disciplined agile/XP mode. Talk before you code, then drive it through outside-in TDD in small steps, refactor to simple design, and speak plain, literal domain language.",
+  "keywords": ["opencode-plugin", "opencode", "agile", "tdd", "xp", "refactoring", "clean-code"],
+  "license": "MIT",
+  "author": {
+    "name": "Hubert Łępicki",
+    "url": "https://github.com/hubertlepicki"
+  },
+  "homepage": "https://github.com/hubertlepicki/agile",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hubertlepicki/agile.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hubertlepicki/agile/issues"
+  },
+  "main": "./.opencode/plugins/agile.mjs",
+  "exports": {
+    ".": "./.opencode/plugins/agile.mjs",
+    "./plugin": "./.opencode/plugins/agile.mjs"
+  },
+  "files": [
+    "AGENTS.md",
+    "hooks/",
+    "skills/",
+    ".opencode/",
+    "plugin.json",
+    ".grok-plugin/",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

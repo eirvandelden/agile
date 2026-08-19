@@ -31,5 +31,7 @@ same terms:
   - hooks/agile-prompt.js           stdin read with never-hang fallback
   - plugin.json                     Grok Build skill-only manifest (no hooks)
   - .grok-plugin/marketplace.json   Grok Build marketplace index
+  - .opencode/plugins/agile.mjs     OpenCode per-turn inject and /agile off
+  - .opencode/plugins/agile-frontmatter.cjs  command-file parser (own module so the plugin has one export)
 
 The ruleset (GOAL.md, skills/agile/SKILL.md, AGENTS.md) is original work.

@@ -6,7 +6,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/license-MIT-111111?style=flat-square" alt="MIT license">
-  <img src="https://img.shields.io/badge/hosts-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Antigravity%20%C2%B7%20Grok%20Build-111111?style=flat-square" alt="Claude Code, Codex, Antigravity, Grok Build">
+  <img src="https://img.shields.io/badge/hosts-Claude%20Code%20%C2%B7%20Codex%20%C2%B7%20Antigravity%20%C2%B7%20Grok%20Build%20%C2%B7%20OpenCode-111111?style=flat-square" alt="Claude Code, Codex, Antigravity, Grok Build, OpenCode">
 </p>
 
 ---
@@ -112,6 +112,24 @@ Start a new session (or reload plugins). The skill shows as `/agile`. Verify wit
 
 `AGENTS.md` still works instruction-only from a checkout without the plugin.
 
+### OpenCode
+
+Add to `opencode.json`:
+
+```
+{ "plugin": ["@hubertlepicki/agile"] }
+```
+
+Run from a checkout instead (the plugin reuses `hooks/` and `skills/`):
+
+```
+{ "plugin": ["./.opencode/plugins/agile.mjs"] }
+```
+
+Injects the ruleset every turn; adds `/agile` (and `/agile off`). OpenCode also auto-loads this repo's `AGENTS.md`, so the rules hold even without the plugin. The plugin is what persists off/on across turns.
+
+The `./` path resolves against your project's `opencode.json`; to share one checkout across projects, point it at the absolute path of the `.mjs` instead (it finds its `hooks/` and `skills/` relative to its own file).
+
 The Claude Code and Codex plugins run small Node.js lifecycle hooks, so `node` must be on your `PATH` (Nix/nvm users: on the *non-interactive* shell's PATH). Without it the skill still loads, the hooks just stay quiet.
 
 ### Any other agent
@@ -126,10 +144,13 @@ Long sessions drift. Agents slide back to code-first the moment the ruleset fall
 |---|---|---|
 | **Claude Code** | `SessionStart` + `UserPromptSubmit` + `SubagentStart` hooks | **Full** — the ruleset is re-injected on *every turn*, and into every subagent |
 | **Codex** | the same three hooks, same file, same event names | **Full** — identical to Claude Code |
+| **OpenCode** | `experimental.chat.system.transform` on every turn | **Full** — the ruleset is re-injected on *every turn* |
 | **Grok Build** | plugin skill + auto-invoke from its description | **Partial** — skill-tier; Grok hooks cannot inject instructions |
 | **Antigravity** | `AGENTS.md` as always-on context | **Partial** — instruction-tier only |
 
 Be aware of the last two rows: **Grok Build and Antigravity do not re-inject the ruleset every turn.** Grok loads `/agile` as a skill (and can auto-invoke it on coding tasks); Antigravity loads `AGENTS.md` once as persistent context. How well the discipline holds over a long session is up to how the host keeps that in the prompt. This plugin cannot add per-turn injection there.
+
+On OpenCode, `/agile off` is what persists the off flag. Saying "stop agile" as ordinary chat is honored for that turn; the next turn injects again unless you used the command.
 
 ## Turning it off
 
@@ -163,7 +184,7 @@ The loop is always on, and refactoring already runs on every green. A command wo
 
 ## Credits
 
-The plugin scaffolding here stands on [ponytail](https://github.com/DietrichGebert/ponytail) by [Dietrich Gebert](https://github.com/DietrichGebert) (MIT). It worked out how to keep a ruleset alive in an agent across Claude Code, Codex, Grok Build, and instruction-only hosts, and `agile` reuses that machinery: the lifecycle hook map, the per-host output shapes, the Grok skill-only marketplace (Grok hooks cannot inject instructions), and the stdin read with its never-hang fallback — including the Windows PowerShell edge case that is only obvious once it has bitten you.
+The plugin scaffolding here stands on [ponytail](https://github.com/DietrichGebert/ponytail) by [Dietrich Gebert](https://github.com/DietrichGebert) (MIT). It worked out how to keep a ruleset alive in an agent across Claude Code, Codex, Grok Build, OpenCode, and instruction-only hosts, and `agile` reuses that machinery: the lifecycle hook map, the per-host output shapes, the Grok skill-only marketplace (Grok hooks cannot inject instructions), the OpenCode system-prompt inject, and the stdin read with its never-hang fallback — including the Windows PowerShell edge case that is only obvious once it has bitten you.
 
 Borrowed with thanks, and with its copyright notice kept intact in [LICENSE](LICENSE). The ruleset itself — [`GOAL.md`](GOAL.md), [`SKILL.md`](skills/agile/SKILL.md), [`AGENTS.md`](AGENTS.md) — is our own; ponytail governs *how much* gets built, `agile` governs *how* it gets built.
 
