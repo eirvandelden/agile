@@ -1,7 +1,9 @@
 #!/usr/bin/env node
-// UserPromptSubmit — re-inject the ruleset every turn. This is what keeps a
-// long session from drifting back to code-first, big-bang habits. Also the
-// place where "stop agile" / "/agile off" is picked up.
+// UserPromptSubmit — remind every turn that agile is active, without
+// re-sending the full ruleset SessionStart already put in context. This is
+// what keeps a long session from drifting back to code-first, big-bang
+// habits. Also the place where "stop agile" / "/agile off" is picked up, and
+// where "/agile on" re-injects the full ruleset after it was off.
 //
 // The stdin read and its never-hang fallback are derived from ponytail
 // (https://github.com/DietrichGebert/ponytail), MIT © 2026 DietrichGebert.
@@ -12,6 +14,7 @@ const {
   activate,
   deactivate,
   getInstructions,
+  getReminder,
   isActive,
   writeHookOutput,
 } = require('./agile-core');
@@ -40,11 +43,15 @@ function finish() {
 
   if (REACTIVATE.test(prompt)) {
     activate();
-  } else if (!isActive()) {
+    writeHookOutput('UserPromptSubmit', getInstructions());
     return;
   }
 
-  writeHookOutput('UserPromptSubmit', getInstructions());
+  if (!isActive()) {
+    return;
+  }
+
+  writeHookOutput('UserPromptSubmit', getReminder());
 }
 
 process.stdin.on('data', chunk => { input += chunk; });

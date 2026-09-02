@@ -118,6 +118,25 @@ test('UserPromptSubmit does not turn off when a request only mentions normal mod
   assert.match(result.stdout, /AGILE MODE ACTIVE/);
 });
 
+test('UserPromptSubmit reminds in one short line on an ordinary turn, instead of re-injecting the full ruleset', () => {
+  try { fs.unlinkSync(claudeFlag); } catch (e) {}
+  const result = run('agile-prompt.js', claudeEnv, promptPayload('add a login form'));
+  assert.equal(result.status, 0, result.stderr);
+  assert.match(result.stdout, /AGILE MODE ACTIVE/);
+  assert.ok(result.stdout.length < 300, `expected a short reminder, got ${result.stdout.length} chars`);
+  assert.doesNotMatch(result.stdout, /conversation, not a ticket/i);
+});
+
+test('UserPromptSubmit /agile on still injects the full ruleset, since the session lost context while off', () => {
+  fs.mkdirSync(path.dirname(claudeFlag), { recursive: true });
+  fs.writeFileSync(claudeFlag, '');
+  const result = run('agile-prompt.js', claudeEnv, promptPayload('/agile on'));
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(fs.existsSync(claudeFlag), false);
+  assert.match(result.stdout, /AGILE MODE ACTIVE/);
+  assert.match(result.stdout, /conversation, not a ticket/i);
+});
+
 test('UserPromptSubmit stays silent while agile is off', () => {
   fs.mkdirSync(path.dirname(claudeFlag), { recursive: true });
   fs.writeFileSync(claudeFlag, '');
