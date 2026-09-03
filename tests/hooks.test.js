@@ -177,11 +177,12 @@ test('UserPromptSubmit still injects when the payload has a UTF-8 BOM', () => {
   assert.match(result.stdout, /AGILE MODE ACTIVE/);
 });
 
-test('UserPromptSubmit still injects when the payload is not JSON', () => {
+test('UserPromptSubmit still injects the full ruleset when the payload is not JSON, since the prompt could not be read', () => {
   try { fs.unlinkSync(claudeFlag); } catch (e) {}
   const result = run('agile-prompt.js', claudeEnv, 'not-json');
   assert.equal(result.status, 0, result.stderr);
   assert.match(result.stdout, /AGILE MODE ACTIVE/);
+  assert.match(result.stdout, /conversation, not a ticket/i);
 });
 
 test('SubagentStart on Claude wraps the ruleset so the host does not drop it', () => {

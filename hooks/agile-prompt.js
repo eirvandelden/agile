@@ -27,12 +27,14 @@ function finish() {
   done = true;
 
   let prompt = '';
+  let unreadable = false;
   try {
     // Some shells prepend a UTF-8 BOM when piping, which breaks JSON.parse.
     prompt = String(JSON.parse(input.replace(/^\uFEFF/, '')).prompt || '');
   } catch (e) {
-    // Unparseable payload — fall through and inject, so a bad read never
-    // silently drops the ruleset.
+    // Unparseable payload — can't tell what the prompt said, so fall through
+    // to the full ruleset below rather than risk silently dropping it.
+    unreadable = true;
   }
 
   if (DEACTIVATE.test(prompt)) {
@@ -51,7 +53,7 @@ function finish() {
     return;
   }
 
-  writeHookOutput('UserPromptSubmit', getReminder());
+  writeHookOutput('UserPromptSubmit', unreadable ? getInstructions() : getReminder());
 }
 
 process.stdin.on('data', chunk => { input += chunk; });
