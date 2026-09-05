@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // GOAL.md, SKILL.md, and AGENTS.md are three renderings of one ruleset.
-// SKILL.md and AGENTS.md are what hosts load; they must also name the off phrases.
+// SKILL.md and AGENTS.md are what hosts load; they, and the per-turn reminder
+// in hooks/agile-core.js, must also name the off phrases.
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -42,8 +43,8 @@ test('GOAL.md, SKILL.md, and AGENTS.md still carry the load-bearing rules', () =
   }
 });
 
-test('SKILL.md and AGENTS.md name every phrase that turns agile off', () => {
-  for (const rel of ['skills/agile/SKILL.md', 'AGENTS.md']) {
+test('SKILL.md, AGENTS.md, and the per-turn reminder name every phrase that turns agile off', () => {
+  for (const rel of ['skills/agile/SKILL.md', 'AGENTS.md', 'hooks/agile-core.js']) {
     const text = read(rel);
     for (const phrase of OFF_PHRASES) {
       assert.ok(text.includes(phrase), `${rel} is missing off phrase: "${phrase}"`);

@@ -71,6 +71,15 @@ function getInstructions() {
     'a non-programmer can follow, in conversation, test names, and commit messages.';
 }
 
+// Every-turn reminder. The full ruleset already lives in session context from
+// SessionStart; re-sending it on every prompt was pure waste.
+const REMINDER = 'AGILE MODE ACTIVE — curiosity before code, red/green/refactor in baby ' +
+  'steps, plain domain language. Off only via stop agile / normal mode / /agile off.';
+
+function getReminder() {
+  return REMINDER;
+}
+
 function writeHookOutput(event, context) {
   try {
     if (isCodex) {
@@ -100,6 +109,7 @@ module.exports = {
   activate,
   deactivate,
   getInstructions,
+  getReminder,
   isActive,
   writeHookOutput,
 };
